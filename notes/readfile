@@ -1,0 +1,21 @@
+
+📁 Final Project Structure
+CopyEdit
+notesapi/
+├── notesapi/
+│   └── settings.py
+│   └── urls.py
+├── notes/
+│   └── models.py
+│   └── serializers.py
+│   └── views.py
+│   └── urls.py
+├── manage.py
+________________________________________
+
+translates model into actual database tables:->
+
+python manage.py makemigrations
+python manage.py migrate
+
+

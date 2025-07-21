@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notes API</title>
+</head>
+<body>
+  <h1>Notes</h1>
+
+  <form id="noteForm">
+    <input type="text" id="title" placeholder="Title" required />
+    <textarea id="content" placeholder="Content" required></textarea>
+    <button type="submit">Save Note</button>
+  </form>
+
+  <ul id="notesList"></ul>
+
+  <script>
+    const API_URL = 'http://127.0.0.1:8000/api/notes/';
+
+    async function fetchNotes() {
+      const res = await fetch(API_URL);
+      const notes = await res.json();
+      const list = document.getElementById('notesList');
+      list.innerHTML = '';
+      notes.forEach(note => {
+        const item = document.createElement('li');
+        item.innerHTML = `
+          <strong>${note.title}</strong>: ${note.content}
+          <button onclick="deleteNote(${note.id})">Delete</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    async function deleteNote(id) {
+      await fetch(API_URL + id + '/', { method: 'DELETE' });
+      fetchNotes();
+    }
+
+    document.getElementById('noteForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content })
+      });
+      fetchNotes();
+    });
+
+    fetchNotes();
+  </script>
+</body>
+</html>
